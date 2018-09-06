@@ -1,32 +1,57 @@
-runtime syntax/groovy.vim
-syn keyword jenkinsfileBuiltInVariable currentBuild
+" syntax/Jenkinsfile.vim
 
-syn keyword jenkinsfileSection pipeline agent stages steps
+" For version 5.x: Clear all syntax items
+" For versions greater than 6.x: Quit when a syntax file was already loaded
+if version < 600
+  syntax clear
+elseif exists("b:current_syntax")
+  finish
+endif
 
+
+" this assumes you have some syntax/groovy.vim in you runtime path
+" which I do, because of a plugin install
+runtime! syntax/groovy.vim
+
+" Syntax: Global Variables
+syn keyword jenkinsfileGlobalVariable perfReport bzt params env currentBuild scm
+
+" Syntax: Pipeline
+syn keyword jenkinsfilePipeline pipeline
+
+" Syntax: Sections
+syn keyword jenkinsfileSection agent stages steps post
+
+" Syntax: Directives
 syn keyword jenkinsfileDirective environment options parameters triggers stage tools input when
 
+" Syntax: Options
 syn keyword jenkinsfileOption contained buildDiscarder disableConcurrentBuilds overrideIndexTriggers skipDefaultCheckout nextgroup=jenkinsfileOptionParams
 syn keyword jenkinsfileOption contained skipStagesAfterUnstable checkoutToSubdirectory timeout retry timestamps nextgroup=jenkinsfileOptionParams
 syn region  jenkinsfileOptionParams contained start="(" end=")" transparent contains=@groovyTop
 syn match   jenkinsfileOptionO /[a-zA-Z]\+([^)]*)/ contains=jenkinsfileOption,jenkinsfileOptionParams transparent containedin=groovyParenT1
 
+" Syntax: Core Steps within file sections
 syn keyword jenkinsfileCoreStep checkout
 syn keyword jenkinsfileCoreStep docker skipwhite nextgroup=jenkinsFileDockerConfigBlock
 syn keyword jenkinsfileCoreStep node
 syn keyword jenkinsfileCoreStep scm
 syn keyword jenkinsfileCoreStep sh
-syn keyword jenkinsfileCoreStep stage
 syn keyword jenkinsfileCoreStep parallel
-syn keyword jenkinsfileCoreStep steps
 syn keyword jenkinsfileCoreStep step
 syn keyword jenkinsfileCoreStep tool
+syn keyword jenkinsfileCoreStep always
+syn keyword jenkinsfileCoreStep changed
+syn keyword jenkinsfileCoreStep failure
+syn keyword jenkinsfileCoreStep success
+syn keyword jenkinsfileCoreStep unstable
+syn keyword jenkinsfileCoreStep aborted
 
-" TODO: These should probably be broken out.
-syn keyword jenkinsfileCoreStep post always changed failure success unstable aborted 
-
+" Syntax: Docker specific syntax
 syn region  jenkinsFileDockerConfigBlock contained start="{" end="}" contains=groovyString,jenkinsfileDockerKeyword transparent
 syn keyword jenkinsFileDockerKeyword contained image args dockerfile additionalBuildArgs
 
+" Syntax: Pipeline Steps
 syn keyword jenkinsfilePipelineStep Applitools ArtifactoryGradleBuild Consul MavenDescriptorStep OneSky VersionNumber
 syn keyword jenkinsfilePipelineStep ViolationsToBitbucketServer ViolationsToGitHub ViolationsToGitLab _OcAction _OcContextInit
 syn keyword jenkinsfilePipelineStep _OcWatch acceptGitLabMR acsDeploy activateDTConfiguration addBadge addErrorBadge
@@ -95,14 +120,14 @@ syn keyword jenkinsfilePipelineStep runLoadRunnerScript runValgrind s3CopyArtifa
 syn keyword jenkinsfilePipelineStep salt sauce saucePublisher sauceconnect script selectRun sendCIMessage sendDeployableMessage
 syn keyword jenkinsfilePipelineStep serviceNow_attachFile serviceNow_attachZip serviceNow_createChange serviceNow_getCTask
 syn keyword jenkinsfilePipelineStep serviceNow_getChangeState serviceNow_updateChangeItem setAccountAlias setGerritReview
-syn keyword jenkinsfilePipelineStep setGitHubPullRequestStatus sh sha1 signAndroidApks silkcentral silkcentralCollectResults
+syn keyword jenkinsfilePipelineStep setGitHubPullRequestStatus sha1 signAndroidApks silkcentral silkcentralCollectResults
 syn keyword jenkinsfilePipelineStep slackSend sleep sloccountPublish snsPublish snykSecurity sonarToGerrit sparkSend
-syn keyword jenkinsfilePipelineStep splitTests springBoot sscm sseBuild sseBuildAndPublish sshPublisher sshagent stage
-syn keyword jenkinsfilePipelineStep startET startSandbox startSession startTS stash step stepcounter stopET stopSandbox
+syn keyword jenkinsfilePipelineStep splitTests springBoot sscm sseBuild sseBuildAndPublish sshPublisher sshagent
+syn keyword jenkinsfilePipelineStep startET startSandbox startSession startTS stash stepcounter stopET stopSandbox
 syn keyword jenkinsfilePipelineStep stopSession stopTS submitJUnitTestResultsToqTest submitModuleBuildRequest svChangeModeStep
 syn keyword jenkinsfilePipelineStep svDeployStep svExportStep svUndeployStep svn tagImage task teamconcert tee testFolder
 syn keyword jenkinsfilePipelineStep testPackage testProject testiniumExecution themisRefresh themisReport throttle time
-syn keyword jenkinsfilePipelineStep timeout timestamps tm tool touch triggerInputStep triggerJob typetalkSend uftScenarioLoad
+syn keyword jenkinsfilePipelineStep timeout timestamps tm touch triggerInputStep triggerJob typetalkSend uftScenarioLoad
 syn keyword jenkinsfilePipelineStep unarchive unstash unzip updateBotPush updateGitlabCommitStatus updateIdP updateTrustPolicy
 syn keyword jenkinsfilePipelineStep upload-pgyer uploadProgetPackage uploadToIncappticConnect vSphere validateDeclarativePipeline
 syn keyword jenkinsfilePipelineStep vmanagerLaunch waitForCIMessage waitForJob waitForQualityGate waitForWebhook waitUntil
@@ -113,12 +138,14 @@ syn keyword jenkinsfilePipelineStep withTypetalk wrap writeFile writeJSON writeM
 syn keyword jenkinsfilePipelineStep ws xUnitImporter xUnitUploader xldCreatePackage xldDeploy xldPublishPackage xlrCreateRelease
 syn keyword jenkinsfilePipelineStep xrayScanBuild zip
 
-hi link jenkinsfileSection           Statement
-hi link jenkinsfileDirective         jenkinsfileSection
-hi link jenkinsfileOption            Function
-hi link jenkinsfileCoreStep          Function
-hi link jenkinsfilePipelineStep      Include
-hi link jenkinsfileBuiltInVariable   Identifier
-hi link jenkinsFileDockerKeyword     jenkinsfilePipelineStep
+" Define highlighting
+hi link jenkinsfileGlobalVariable     Keyword
+hi link jenkinsfilePipeline           Structure
+hi link jenkinsfileSection            Identifier
+hi link jenkinsfileDirective          Statement
+hi link jenkinsfileCoreStep           Include
+hi link jenkinsfilePipelineStep       Keyword
+hi link jenkinsfileOption             jenkinsfilePipelineStep
+hi link jenkinsFileDockerKeyword      jenkinsfilePipelineStep
 
 let b:current_syntax = "Jenkinsfile"
