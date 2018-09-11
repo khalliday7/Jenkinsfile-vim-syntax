@@ -20,7 +20,7 @@ syn keyword jenkinsfileGlobalVariable perfReport bzt params env currentBuild scm
 syn keyword jenkinsfilePipeline pipeline
 
 " Syntax: Sections
-syn keyword jenkinsfileSection agent stages steps post
+syn keyword jenkinsfileSection agent stages post
 
 " Syntax: Directives
 syn keyword jenkinsfileDirective environment options parameters triggers stage tools input when
@@ -30,6 +30,9 @@ syn keyword jenkinsfileOption contained buildDiscarder disableConcurrentBuilds o
 syn keyword jenkinsfileOption contained skipStagesAfterUnstable checkoutToSubdirectory timeout retry timestamps nextgroup=jenkinsfileOptionParams
 syn region  jenkinsfileOptionParams contained start="(" end=")" transparent contains=@groovyTop
 syn match   jenkinsfileOptionO /[a-zA-Z]\+([^)]*)/ contains=jenkinsfileOption,jenkinsfileOptionParams transparent containedin=groovyParenT1
+
+" Syntax: seperate steps from sections
+syn keyword jenkinsFileSteps steps
 
 " Syntax: Core Steps within file sections
 syn keyword jenkinsfileCoreStep checkout
@@ -144,6 +147,7 @@ hi link jenkinsfilePipeline           Structure
 hi link jenkinsfileSection            Identifier
 hi link jenkinsfileDirective          Statement
 hi link jenkinsfileCoreStep           Include
+hi link jenkinsfileSteps              jenkinsfileCoreStep
 hi link jenkinsfilePipelineStep       Keyword
 hi link jenkinsfileOption             jenkinsfilePipelineStep
 hi link jenkinsFileDockerKeyword      jenkinsfilePipelineStep
