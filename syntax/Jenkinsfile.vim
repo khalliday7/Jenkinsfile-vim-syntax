@@ -18,6 +18,13 @@ syn match bracket4 /{\|}/
 syn match bracket5 /{\|}/
 syn match bracket6 /{\|}/
 syn match bracket7 /{\|}/
+hi bracket1 guifg=#00ff00
+hi bracket2 guifg=#ff0000
+hi bracket3 guifg=#0000ff
+hi bracket4 guifg=#00ffff
+hi bracket5 guifg=#ffff00
+hi bracket6 guifg=#ff00ff
+hi bracket7 guifg=NONE
 
 " for leading space
 syn match lsp1 /^\s\+/
@@ -27,6 +34,13 @@ syn match lsp4 /^\s\+/
 syn match lsp5 /^\s\+/
 syn match lsp6 /^\s\+/
 syn match lsp7 /^\s\+/
+hi lsp1 guibg=#00ff00
+hi lsp2 guibg=#ff0000
+hi lsp3 guibg=#0000ff
+hi lsp4 guibg=#00ffff
+hi lsp5 guibg=#ffff00
+hi lsp6 guibg=#ff00ff
+hi lsp7 guibg=NONE
 
 " define regioins
 syn region level1           matchgroup=bracket1 start="{" matchgroup=bracket1 end="}" transparent contains=@jenkinsfileKeyword,level2,lsp1
@@ -37,12 +51,12 @@ syn region level5 contained matchgroup=bracket5 start="{" matchgroup=bracket5 en
 syn region level6 contained matchgroup=bracket6 start="{" matchgroup=bracket6 end="}" transparent contains=@jenkinsfileKeyword,level1,lsp6
 
 " define level highlighting
-hi link level1 Structure
-hi link level2 Identifier
-hi link level3 Statement
-hi link level4 Include
-hi link level5 Keyword
-hi link level6 Exception
+" hi link level1 Structure
+" hi link level2 Identifier
+" hi link level3 Statement
+" hi link level4 Include
+" hi link level5 Keyword
+" hi link level6 Exception
 
 
 " Define Jenkins File Keywords
