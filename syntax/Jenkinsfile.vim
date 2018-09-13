@@ -8,148 +8,141 @@ elseif exists("b:current_syntax")
   finish
 endif
 
-
-" this assumes you have some syntax/groovy.vim in you runtime path
-" which I do, because of a plugin install
 runtime! syntax/groovy.vim
 
-" Syntax: Global Variables
-syn keyword jenkinsfileGlobalVariable perfReport bzt params env currentBuild scm
+" matchgroup
+syn match bracket1 /{\|}/
+syn match bracket2 /{\|}/
+syn match bracket3 /{\|}/
+syn match bracket4 /{\|}/
+syn match bracket5 /{\|}/
+syn match bracket6 /{\|}/
+syn match bracket7 /{\|}/
 
-" Syntax: Pipeline
-syn keyword jenkinsfilePipeline pipeline
+" for leading space
+syn match lsp1 /^\s\+/
+syn match lsp2 /^\s\+/
+syn match lsp3 /^\s\+/
+syn match lsp4 /^\s\+/
+syn match lsp5 /^\s\+/
+syn match lsp6 /^\s\+/
+syn match lsp7 /^\s\+/
 
-" Syntax: Sections
-syn keyword jenkinsfileSection agent stages post
+" define regioins
+syn region level1           matchgroup=bracket1 start="{" matchgroup=bracket1 end="}" transparent contains=@jenkinsfileKeyword,level2,lsp1
+syn region level2 contained matchgroup=bracket2 start="{" matchgroup=bracket2 end="}" transparent contains=@jenkinsfileKeyword,level3,lsp2
+syn region level3 contained matchgroup=bracket3 start="{" matchgroup=bracket3 end="}" transparent contains=@jenkinsfileKeyword,level4,lsp3
+syn region level4 contained matchgroup=bracket4 start="{" matchgroup=bracket4 end="}" transparent contains=@jenkinsfileKeyword,level5,lsp4
+syn region level5 contained matchgroup=bracket5 start="{" matchgroup=bracket5 end="}" transparent contains=@jenkinsfileKeyword,level6,lsp5
+syn region level6 contained matchgroup=bracket6 start="{" matchgroup=bracket6 end="}" transparent contains=@jenkinsfileKeyword,level1,lsp6
 
-" Syntax: Directives
-syn keyword jenkinsfileDirective environment options parameters triggers stage tools input when
+" define level highlighting
+hi link level1 Structure
+hi link level2 Identifier
+hi link level3 Statement
+hi link level4 Include
+hi link level5 Keyword
+hi link level6 Exception
 
-" Syntax: Options
-syn keyword jenkinsfileOption contained buildDiscarder disableConcurrentBuilds overrideIndexTriggers skipDefaultCheckout nextgroup=jenkinsfileOptionParams
-syn keyword jenkinsfileOption contained skipStagesAfterUnstable checkoutToSubdirectory timeout retry timestamps nextgroup=jenkinsfileOptionParams
-syn region  jenkinsfileOptionParams contained start="(" end=")" transparent contains=@groovyTop
-syn match   jenkinsfileOptionO /[a-zA-Z]\+([^)]*)/ contains=jenkinsfileOption,jenkinsfileOptionParams transparent containedin=groovyParenT1
 
-" Syntax: seperate steps from sections
-syn keyword jenkinsFileSteps steps
-
-" Syntax: Core Steps within file sections
-syn keyword jenkinsfileCoreStep checkout
-syn keyword jenkinsfileCoreStep docker skipwhite nextgroup=jenkinsFileDockerConfigBlock
-syn keyword jenkinsfileCoreStep node
-syn keyword jenkinsfileCoreStep scm
-syn keyword jenkinsfileCoreStep sh
-syn keyword jenkinsfileCoreStep parallel
-syn keyword jenkinsfileCoreStep step
-syn keyword jenkinsfileCoreStep tool
-syn keyword jenkinsfileCoreStep always
-syn keyword jenkinsfileCoreStep changed
-syn keyword jenkinsfileCoreStep failure
-syn keyword jenkinsfileCoreStep success
-syn keyword jenkinsfileCoreStep unstable
-syn keyword jenkinsfileCoreStep aborted
-
-" Syntax: Docker specific syntax
-syn region  jenkinsFileDockerConfigBlock contained start="{" end="}" contains=groovyString,jenkinsfileDockerKeyword transparent
-syn keyword jenkinsFileDockerKeyword contained image args dockerfile additionalBuildArgs
-
-" Syntax: Pipeline Steps
-syn keyword jenkinsfilePipelineStep Applitools ArtifactoryGradleBuild Consul MavenDescriptorStep OneSky VersionNumber
-syn keyword jenkinsfilePipelineStep ViolationsToBitbucketServer ViolationsToGitHub ViolationsToGitLab _OcAction _OcContextInit
-syn keyword jenkinsfilePipelineStep _OcWatch acceptGitLabMR acsDeploy activateDTConfiguration addBadge addErrorBadge
-syn keyword jenkinsfilePipelineStep addGitLabMRComment addInfoBadge addInteractivePromotion addShortText addWarningBadge
-syn keyword jenkinsfilePipelineStep allure anchore androidApkMove androidApkUpload androidLint ansiColor ansiblePlaybook
-syn keyword jenkinsfilePipelineStep ansibleTower ansibleVault appMonBuildEnvironment appMonPublishTestResults appMonRegisterTestRun
-syn keyword jenkinsfilePipelineStep applatix approveReceivedEvent approveRequestedEvent aqua archive archiveArtifacts
-syn keyword jenkinsfilePipelineStep arestocats artifactResolver artifactoryDistributeBuild artifactoryDownload artifactoryMavenBuild
-syn keyword jenkinsfilePipelineStep artifactoryPromoteBuild artifactoryUpload awaitDeployment awaitDeploymentCompletion
-syn keyword jenkinsfilePipelineStep awsCodeBuild awsIdentity azureCLI azureDownload azureFunctionAppPublish azureUpload
-syn keyword jenkinsfilePipelineStep azureVMSSUpdate azureVMSSUpdateInstances azureWebAppPublish backlogPullRequest bat
-syn keyword jenkinsfilePipelineStep bearychatSend benchmark bitbucketStatusNotify blazeMeterTest build buildBamboo buildImage
-syn keyword jenkinsfilePipelineStep bzt cache catchError cbt cbtScreenshotsTest cbtSeleniumTest cfInvalidate cfnCreateChangeSet
-syn keyword jenkinsfilePipelineStep cfnDelete cfnDeleteStackSet cfnDescribe cfnExecuteChangeSet cfnExports cfnUpdate
-syn keyword jenkinsfilePipelineStep cfnUpdateStackSet cfnValidate changeAsmVer checkstyle chefSinatraStep cifsPublisher
-syn keyword jenkinsfilePipelineStep cleanWs cleanup cloudshareDockerMachine cm cmake cmakeBuild cobertura codefreshLaunch
-syn keyword jenkinsfilePipelineStep codefreshRun codescene codesonar collectEnv conanAddRemote conanAddUser configFileProvider
-syn keyword jenkinsfilePipelineStep container containerLog contrastAgent contrastVerification copy copyArtifacts coverityResults
-syn keyword jenkinsfilePipelineStep cpack createDeploymentEvent createEnvironment createEvent createMemoryDump createSummary
-syn keyword jenkinsfilePipelineStep createThreadDump crxBuild crxDeploy crxDownload crxReplicate crxValidate ctest ctmInitiatePipeline
-syn keyword jenkinsfilePipelineStep ctmPostPiData ctmSetPiData cucumber cucumberSlackSend currentNamespace debianPbuilder
-syn keyword jenkinsfilePipelineStep deleteDir dependencyCheckAnalyzer dependencyCheckPublisher dependencyCheckUpdateOnly
-syn keyword jenkinsfilePipelineStep dependencyTrackPublisher deployAPI deployArtifacts deployLambda dingding dir disk
-syn keyword jenkinsfilePipelineStep dockerFingerprintFrom dockerFingerprintRun dockerNode dockerPullStep dockerPushStep
-syn keyword jenkinsfilePipelineStep dockerPushWithProxyStep doktor downloadProgetPackage downstreamPublisher dropbox
-syn keyword jenkinsfilePipelineStep dry ec2 ec2ShareAmi echo ecrLogin emailext emailextrecipients envVarsForTool error
-syn keyword jenkinsfilePipelineStep evaluateGate eventSourceLambda executeCerberusCampaign exportPackages exportProjects
-syn keyword jenkinsfilePipelineStep exws exwsAllocate figlet fileExists fileOperations findFiles findbugs fingerprint
-syn keyword jenkinsfilePipelineStep flywayrunner ftp ftpPublisher gatlingArchive getArtifactoryServer getContext getLastChangesPublisher
-syn keyword jenkinsfilePipelineStep git gitbisect githubNotify gitlabBuilds gitlabCommitStatus googleCloudBuild googleStorageDownload
-syn keyword jenkinsfilePipelineStep googleStorageUpload gprbuild greet hipchatSend http httpRequest hub_detect hub_scan
-syn keyword jenkinsfilePipelineStep hub_scan_failure hubotApprove hubotSend importPackages importProjects inNamespace
-syn keyword jenkinsfilePipelineStep inSession initConanClient input invokeLambda isUnix ispwOperation ispwRegisterWebhook
-syn keyword jenkinsfilePipelineStep ispwWaitForWebhook jacoco jdbc jiraAddComment jiraAddWatcher jiraAssignIssue jiraAssignableUserSearch
-syn keyword jenkinsfilePipelineStep jiraComment jiraDeleteAttachment jiraDeleteIssueLink jiraDeleteIssueRemoteLink jiraDeleteIssueRemoteLinks
-syn keyword jenkinsfilePipelineStep jiraDownloadAttachment jiraEditComment jiraEditComponent jiraEditIssue jiraEditVersion
-syn keyword jenkinsfilePipelineStep jiraGetAttachmentInfo jiraGetComment jiraGetComments jiraGetComponent jiraGetComponentIssueCount
-syn keyword jenkinsfilePipelineStep jiraGetFields jiraGetIssue jiraGetIssueLink jiraGetIssueLinkTypes jiraGetIssueRemoteLink
-syn keyword jenkinsfilePipelineStep jiraGetIssueRemoteLinks jiraGetIssueTransitions jiraGetIssueWatches jiraGetProject
-syn keyword jenkinsfilePipelineStep jiraGetProjectComponents jiraGetProjectStatuses jiraGetProjectVersions jiraGetProjects
-syn keyword jenkinsfilePipelineStep jiraGetVersion jiraIssueSelector jiraJqlSearch jiraLinkIssues jiraNewComponent jiraNewIssue
-syn keyword jenkinsfilePipelineStep jiraNewIssueRemoteLink jiraNewIssues jiraNewVersion jiraNotifyIssue jiraSearch jiraTransitionIssue
-syn keyword jenkinsfilePipelineStep jiraUploadAttachment jiraUserSearch jmhReport jobDsl junit klocworkBuildSpecGeneration
-syn keyword jenkinsfilePipelineStep klocworkIncremental klocworkIntegrationStep1 klocworkIntegrationStep2 klocworkIssueSync
-syn keyword jenkinsfilePipelineStep klocworkQualityGateway klocworkWrapper kubernetesApply kubernetesDeploy lastChanges
-syn keyword jenkinsfilePipelineStep library libraryResource liquibaseDbDoc liquibaseRollback liquibaseUpdate listAWSAccounts
-syn keyword jenkinsfilePipelineStep livingDocs loadRunnerTest lock logstashSend mail marathon mattermostSend memoryMap
-syn keyword jenkinsfilePipelineStep milestone mockLoad newArtifactoryServer newBuildInfo newGradleBuild newMavenBuild
-syn keyword jenkinsfilePipelineStep nexusArtifactUploader nexusPolicyEvaluation nexusPublisher node nodejs nodesByLabel
-syn keyword jenkinsfilePipelineStep notifyBitbucket notifyDeploymon notifyOTC nunit nvm octoPerfTest office365ConnectorSend
-syn keyword jenkinsfilePipelineStep openTasks openshiftBuild openshiftCreateResource openshiftDeleteResourceByJsonYaml
-syn keyword jenkinsfilePipelineStep openshiftDeleteResourceByKey openshiftDeleteResourceByLabels openshiftDeploy openshiftExec
-syn keyword jenkinsfilePipelineStep openshiftImageStream openshiftScale openshiftTag openshiftVerifyBuild openshiftVerifyDeployment
-syn keyword jenkinsfilePipelineStep openshiftVerifyService openstackMachine osfBuilderSuiteForSFCCDeploy p4 p4approve
-syn keyword jenkinsfilePipelineStep p4publish p4sync p4tag p4unshelve pagerduty parasoftFindings pcBuild pdrone perfReport
-syn keyword jenkinsfilePipelineStep perfSigReports perfpublisher plot pmd podTemplate powershell pragprog pretestedIntegrationPublisher
-syn keyword jenkinsfilePipelineStep properties protecodesc publishATX publishBrakeman publishBuildInfo publishBuildRecord
-syn keyword jenkinsfilePipelineStep publishConfluence publishDeployRecord publishETLogs publishEventQ publishGenerators
-syn keyword jenkinsfilePipelineStep publishHTML publishLambda publishLastChanges publishSQResults publishStoplight publishTMS
-syn keyword jenkinsfilePipelineStep publishTRF publishTestResult publishTraceAnalysis publishUNIT publishValgrind pullPerfSigReports
-syn keyword jenkinsfilePipelineStep puppetCode puppetHiera puppetJob puppetQuery pushImage pushToCloudFoundry pwd pybat
-syn keyword jenkinsfilePipelineStep pysh qc queryModuleBuildRequest questavrm r radargunreporting rancher readFile readJSON
-syn keyword jenkinsfilePipelineStep readManifest readMavenPom readProperties readTrusted readXml readYaml realtimeJUnit
-syn keyword jenkinsfilePipelineStep registerWebhook release resolveScm retry rocketSend rtp runConanCommand runFromAlmBuilder
-syn keyword jenkinsfilePipelineStep runLoadRunnerScript runValgrind s3CopyArtifact s3Delete s3Download s3FindFiles s3Upload
-syn keyword jenkinsfilePipelineStep salt sauce saucePublisher sauceconnect script selectRun sendCIMessage sendDeployableMessage
-syn keyword jenkinsfilePipelineStep serviceNow_attachFile serviceNow_attachZip serviceNow_createChange serviceNow_getCTask
-syn keyword jenkinsfilePipelineStep serviceNow_getChangeState serviceNow_updateChangeItem setAccountAlias setGerritReview
-syn keyword jenkinsfilePipelineStep setGitHubPullRequestStatus sha1 signAndroidApks silkcentral silkcentralCollectResults
-syn keyword jenkinsfilePipelineStep slackSend sleep sloccountPublish snsPublish snykSecurity sonarToGerrit sparkSend
-syn keyword jenkinsfilePipelineStep splitTests springBoot sscm sseBuild sseBuildAndPublish sshPublisher sshagent
-syn keyword jenkinsfilePipelineStep startET startSandbox startSession startTS stash stepcounter stopET stopSandbox
-syn keyword jenkinsfilePipelineStep stopSession stopTS submitJUnitTestResultsToqTest submitModuleBuildRequest svChangeModeStep
-syn keyword jenkinsfilePipelineStep svDeployStep svExportStep svUndeployStep svn tagImage task teamconcert tee testFolder
-syn keyword jenkinsfilePipelineStep testPackage testProject testiniumExecution themisRefresh themisReport throttle time
-syn keyword jenkinsfilePipelineStep timeout timestamps tm touch triggerInputStep triggerJob typetalkSend uftScenarioLoad
-syn keyword jenkinsfilePipelineStep unarchive unstash unzip updateBotPush updateGitlabCommitStatus updateIdP updateTrustPolicy
-syn keyword jenkinsfilePipelineStep upload-pgyer uploadProgetPackage uploadToIncappticConnect vSphere validateDeclarativePipeline
-syn keyword jenkinsfilePipelineStep vmanagerLaunch waitForCIMessage waitForJob waitForQualityGate waitForWebhook waitUntil
-syn keyword jenkinsfilePipelineStep walk waptProReport warnings whitesource winRMClient withAWS withAnt withContext withCoverityEnv
-syn keyword jenkinsfilePipelineStep withCredentials withDockerContainer withDockerRegistry withDockerServer withEnv withKafkaLog
-syn keyword jenkinsfilePipelineStep withKubeConfig withMaven withNPM withPod withPythonEnv withSCM withSandbox withSonarQubeEnv
-syn keyword jenkinsfilePipelineStep withTypetalk wrap writeFile writeJSON writeMavenPom writeProperties writeXml writeYaml
-syn keyword jenkinsfilePipelineStep ws xUnitImporter xUnitUploader xldCreatePackage xldDeploy xldPublishPackage xlrCreateRelease
-syn keyword jenkinsfilePipelineStep xrayScanBuild zip
-
-" Define highlighting
-hi link jenkinsfileGlobalVariable     Keyword
-hi link jenkinsfilePipeline           Structure
-hi link jenkinsfileSection            Identifier
-hi link jenkinsfileDirective          Statement
-hi link jenkinsfileCoreStep           Include
-hi link jenkinsfileSteps              jenkinsfileCoreStep
-hi link jenkinsfilePipelineStep       Keyword
-hi link jenkinsfileOption             jenkinsfilePipelineStep
-hi link jenkinsFileDockerKeyword      jenkinsfilePipelineStep
+" Define Jenkins File Keywords
+" Pipeline
+syn keyword jenkinsfileKeyword contained pipeline
+" Directives
+syn keyword jenkinsfileKeyword contained environment options parameters triggers stage tools input when
+" Global Variables
+syn keyword jenkinsfileKeyword contained perfReport bzt params env currentBuild scm
+" Sections
+syn keyword jenkinsfileKeyword contained agent stages post steps
+syn keyword jenkinsfileKeyword contained image args dockerfile additionalBuildArgs
+" Core Steps within file sections
+syn keyword jenkinsfileKeyword contained checkout docker node scm sh parallel step tool always
+syn keyword jenkinsfileKeyword contained changed failure success unstable aborted
+" Pipeline Steps
+syn keyword jenkinsfileKeyword contained Applitools ArtifactoryGradleBuild Consul MavenDescriptorStep OneSky VersionNumber
+syn keyword jenkinsfileKeyword contained ViolationsToBitbucketServer ViolationsToGitHub ViolationsToGitLab _OcAction _OcContextInit
+syn keyword jenkinsfileKeyword contained _OcWatch acceptGitLabMR acsDeploy activateDTConfiguration addBadge addErrorBadge
+syn keyword jenkinsfileKeyword contained addGitLabMRComment addInfoBadge addInteractivePromotion addShortText addWarningBadge
+syn keyword jenkinsfileKeyword contained allure anchore androidApkMove androidApkUpload androidLint ansiColor ansiblePlaybook
+syn keyword jenkinsfileKeyword contained ansibleTower ansibleVault appMonBuildEnvironment appMonPublishTestResults appMonRegisterTestRun
+syn keyword jenkinsfileKeyword contained applatix approveReceivedEvent approveRequestedEvent aqua archive archiveArtifacts
+syn keyword jenkinsfileKeyword contained arestocats artifactResolver artifactoryDistributeBuild artifactoryDownload artifactoryMavenBuild
+syn keyword jenkinsfileKeyword contained artifactoryPromoteBuild artifactoryUpload awaitDeployment awaitDeploymentCompletion
+syn keyword jenkinsfileKeyword contained awsCodeBuild awsIdentity azureCLI azureDownload azureFunctionAppPublish azureUpload
+syn keyword jenkinsfileKeyword contained azureVMSSUpdate azureVMSSUpdateInstances azureWebAppPublish backlogPullRequest bat
+syn keyword jenkinsfileKeyword contained bearychatSend benchmark bitbucketStatusNotify blazeMeterTest build buildBamboo buildImage
+syn keyword jenkinsfileKeyword contained bzt cache catchError cbt cbtScreenshotsTest cbtSeleniumTest cfInvalidate cfnCreateChangeSet
+syn keyword jenkinsfileKeyword contained cfnDelete cfnDeleteStackSet cfnDescribe cfnExecuteChangeSet cfnExports cfnUpdate
+syn keyword jenkinsfileKeyword contained cfnUpdateStackSet cfnValidate changeAsmVer checkstyle chefSinatraStep cifsPublisher
+syn keyword jenkinsfileKeyword contained cleanWs cleanup cloudshareDockerMachine cm cmake cmakeBuild cobertura codefreshLaunch
+syn keyword jenkinsfileKeyword contained codefreshRun codescene codesonar collectEnv conanAddRemote conanAddUser configFileProvider
+syn keyword jenkinsfileKeyword contained container containerLog contrastAgent contrastVerification copy copyArtifacts coverityResults
+syn keyword jenkinsfileKeyword contained cpack createDeploymentEvent createEnvironment createEvent createMemoryDump createSummary
+syn keyword jenkinsfileKeyword contained createThreadDump crxBuild crxDeploy crxDownload crxReplicate crxValidate ctest ctmInitiatePipeline
+syn keyword jenkinsfileKeyword contained ctmPostPiData ctmSetPiData cucumber cucumberSlackSend currentNamespace debianPbuilder
+syn keyword jenkinsfileKeyword contained deleteDir dependencyCheckAnalyzer dependencyCheckPublisher dependencyCheckUpdateOnly
+syn keyword jenkinsfileKeyword contained dependencyTrackPublisher deployAPI deployArtifacts deployLambda dingding dir disk
+syn keyword jenkinsfileKeyword contained dockerFingerprintFrom dockerFingerprintRun dockerNode dockerPullStep dockerPushStep
+syn keyword jenkinsfileKeyword contained dockerPushWithProxyStep doktor downloadProgetPackage downstreamPublisher dropbox
+syn keyword jenkinsfileKeyword contained dry ec2 ec2ShareAmi echo ecrLogin emailext emailextrecipients envVarsForTool error
+syn keyword jenkinsfileKeyword contained evaluateGate eventSourceLambda executeCerberusCampaign exportPackages exportProjects
+syn keyword jenkinsfileKeyword contained exws exwsAllocate figlet fileExists fileOperations findFiles findbugs fingerprint
+syn keyword jenkinsfileKeyword contained flywayrunner ftp ftpPublisher gatlingArchive getArtifactoryServer getContext getLastChangesPublisher
+syn keyword jenkinsfileKeyword contained git gitbisect githubNotify gitlabBuilds gitlabCommitStatus googleCloudBuild googleStorageDownload
+syn keyword jenkinsfileKeyword contained googleStorageUpload gprbuild greet hipchatSend http httpRequest hub_detect hub_scan
+syn keyword jenkinsfileKeyword contained hub_scan_failure hubotApprove hubotSend importPackages importProjects inNamespace
+syn keyword jenkinsfileKeyword contained inSession initConanClient input invokeLambda isUnix ispwOperation ispwRegisterWebhook
+syn keyword jenkinsfileKeyword contained ispwWaitForWebhook jacoco jdbc jiraAddComment jiraAddWatcher jiraAssignIssue jiraAssignableUserSearch
+syn keyword jenkinsfileKeyword contained jiraComment jiraDeleteAttachment jiraDeleteIssueLink jiraDeleteIssueRemoteLink jiraDeleteIssueRemoteLinks
+syn keyword jenkinsfileKeyword contained jiraDownloadAttachment jiraEditComment jiraEditComponent jiraEditIssue jiraEditVersion
+syn keyword jenkinsfileKeyword contained jiraGetAttachmentInfo jiraGetComment jiraGetComments jiraGetComponent jiraGetComponentIssueCount
+syn keyword jenkinsfileKeyword contained jiraGetFields jiraGetIssue jiraGetIssueLink jiraGetIssueLinkTypes jiraGetIssueRemoteLink
+syn keyword jenkinsfileKeyword contained jiraGetIssueRemoteLinks jiraGetIssueTransitions jiraGetIssueWatches jiraGetProject
+syn keyword jenkinsfileKeyword contained jiraGetProjectComponents jiraGetProjectStatuses jiraGetProjectVersions jiraGetProjects
+syn keyword jenkinsfileKeyword contained jiraGetVersion jiraIssueSelector jiraJqlSearch jiraLinkIssues jiraNewComponent jiraNewIssue
+syn keyword jenkinsfileKeyword contained jiraNewIssueRemoteLink jiraNewIssues jiraNewVersion jiraNotifyIssue jiraSearch jiraTransitionIssue
+syn keyword jenkinsfileKeyword contained jiraUploadAttachment jiraUserSearch jmhReport jobDsl junit klocworkBuildSpecGeneration
+syn keyword jenkinsfileKeyword contained klocworkIncremental klocworkIntegrationStep1 klocworkIntegrationStep2 klocworkIssueSync
+syn keyword jenkinsfileKeyword contained klocworkQualityGateway klocworkWrapper kubernetesApply kubernetesDeploy lastChanges
+syn keyword jenkinsfileKeyword contained library libraryResource liquibaseDbDoc liquibaseRollback liquibaseUpdate listAWSAccounts
+syn keyword jenkinsfileKeyword contained livingDocs loadRunnerTest lock logstashSend mail marathon mattermostSend memoryMap
+syn keyword jenkinsfileKeyword contained milestone mockLoad newArtifactoryServer newBuildInfo newGradleBuild newMavenBuild
+syn keyword jenkinsfileKeyword contained nexusArtifactUploader nexusPolicyEvaluation nexusPublisher node nodejs nodesByLabel
+syn keyword jenkinsfileKeyword contained notifyBitbucket notifyDeploymon notifyOTC nunit nvm octoPerfTest office365ConnectorSend
+syn keyword jenkinsfileKeyword contained openTasks openshiftBuild openshiftCreateResource openshiftDeleteResourceByJsonYaml
+syn keyword jenkinsfileKeyword contained openshiftDeleteResourceByKey openshiftDeleteResourceByLabels openshiftDeploy openshiftExec
+syn keyword jenkinsfileKeyword contained openshiftImageStream openshiftScale openshiftTag openshiftVerifyBuild openshiftVerifyDeployment
+syn keyword jenkinsfileKeyword contained openshiftVerifyService openstackMachine osfBuilderSuiteForSFCCDeploy p4 p4approve
+syn keyword jenkinsfileKeyword contained p4publish p4sync p4tag p4unshelve pagerduty parasoftFindings pcBuild pdrone perfReport
+syn keyword jenkinsfileKeyword contained perfSigReports perfpublisher plot pmd podTemplate powershell pragprog pretestedIntegrationPublisher
+syn keyword jenkinsfileKeyword contained properties protecodesc publishATX publishBrakeman publishBuildInfo publishBuildRecord
+syn keyword jenkinsfileKeyword contained publishConfluence publishDeployRecord publishETLogs publishEventQ publishGenerators
+syn keyword jenkinsfileKeyword contained publishHTML publishLambda publishLastChanges publishSQResults publishStoplight publishTMS
+syn keyword jenkinsfileKeyword contained publishTRF publishTestResult publishTraceAnalysis publishUNIT publishValgrind pullPerfSigReports
+syn keyword jenkinsfileKeyword contained puppetCode puppetHiera puppetJob puppetQuery pushImage pushToCloudFoundry pwd pybat
+syn keyword jenkinsfileKeyword contained pysh qc queryModuleBuildRequest questavrm r radargunreporting rancher readFile readJSON
+syn keyword jenkinsfileKeyword contained readManifest readMavenPom readProperties readTrusted readXml readYaml realtimeJUnit
+syn keyword jenkinsfileKeyword contained registerWebhook release resolveScm retry rocketSend rtp runConanCommand runFromAlmBuilder
+syn keyword jenkinsfileKeyword contained runLoadRunnerScript runValgrind s3CopyArtifact s3Delete s3Download s3FindFiles s3Upload
+syn keyword jenkinsfileKeyword contained salt sauce saucePublisher sauceconnect script selectRun sendCIMessage sendDeployableMessage
+syn keyword jenkinsfileKeyword contained serviceNow_attachFile serviceNow_attachZip serviceNow_createChange serviceNow_getCTask
+syn keyword jenkinsfileKeyword contained serviceNow_getChangeState serviceNow_updateChangeItem setAccountAlias setGerritReview
+syn keyword jenkinsfileKeyword contained setGitHubPullRequestStatus sha1 signAndroidApks silkcentral silkcentralCollectResults
+syn keyword jenkinsfileKeyword contained slackSend sleep sloccountPublish snsPublish snykSecurity sonarToGerrit sparkSend
+syn keyword jenkinsfileKeyword contained splitTests springBoot sscm sseBuild sseBuildAndPublish sshPublisher sshagent
+syn keyword jenkinsfileKeyword contained startET startSandbox startSession startTS stash stepcounter stopET stopSandbox
+syn keyword jenkinsfileKeyword contained stopSession stopTS submitJUnitTestResultsToqTest submitModuleBuildRequest svChangeModeStep
+syn keyword jenkinsfileKeyword contained svDeployStep svExportStep svUndeployStep svn tagImage task teamconcert tee testFolder
+syn keyword jenkinsfileKeyword contained testPackage testProject testiniumExecution themisRefresh themisReport throttle time
+syn keyword jenkinsfileKeyword contained timeout timestamps tm touch triggerInputStep triggerJob typetalkSend uftScenarioLoad
+syn keyword jenkinsfileKeyword contained unarchive unstash unzip updateBotPush updateGitlabCommitStatus updateIdP updateTrustPolicy
+syn keyword jenkinsfileKeyword contained upload-pgyer uploadProgetPackage uploadToIncappticConnect vSphere validateDeclarativePipeline
+syn keyword jenkinsfileKeyword contained vmanagerLaunch waitForCIMessage waitForJob waitForQualityGate waitForWebhook waitUntil
+syn keyword jenkinsfileKeyword contained walk waptProReport warnings whitesource winRMClient withAWS withAnt withContext withCoverityEnv
+syn keyword jenkinsfileKeyword contained withCredentials withDockerContainer withDockerRegistry withDockerServer withEnv withKafkaLog
+syn keyword jenkinsfileKeyword contained withKubeConfig withMaven withNPM withPod withPythonEnv withSCM withSandbox withSonarQubeEnv
+syn keyword jenkinsfileKeyword contained withTypetalk wrap writeFile writeJSON writeMavenPom writeProperties writeXml writeYaml
+syn keyword jenkinsfileKeyword contained ws xUnitImporter xUnitUploader xldCreatePackage xldDeploy xldPublishPackage xlrCreateRelease
+syn keyword jenkinsfileKeyword contained xrayScanBuild zip
 
 let b:current_syntax = "Jenkinsfile"
