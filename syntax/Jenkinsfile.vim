@@ -107,7 +107,7 @@ let s:jenkins_keywords = [
       \ 'withKubeConfig', 'withMaven', 'withNPM', 'withPod', 'withPythonEnv', 'withSCM', 'withSandbox', 'withSonarQubeEnv',
       \ 'withTypetalk', 'wrap', 'writeFile', 'writeJSON', 'writeMavenPom', 'writeProperties', 'writeXml', 'writeYaml',
       \ 'ws', 'xUnitImporter', 'xUnitUploader', 'xldCreatePackage', 'xldDeploy', 'xldPublishPackage', 'xlrCreateRelease',
-      \ 'xrayScanBuild', 'zip'
+      \ 'xrayScanBuild', 'zip', 'expression'
       \ ]
 
 let s:levels = [
