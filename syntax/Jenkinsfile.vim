@@ -1,4 +1,5 @@
-" syntax/Jenkinsfile.vim
+"
+"syntax/Jenkinsfile.vim
 
 " For version 5.x: Clear all syntax items
 " For versions greater than 6.x: Quit when a syntax file was already loaded
@@ -8,12 +9,8 @@ elseif exists("b:current_syntax")
   finish
 endif
 
-runtime! syntax/groovy.vim
-
-" Top level
-syn keyword jenkinsfileTop pipeline
-syn keyword jenkinsfileTop library
-hi link jenkinsfileTop Structure
+" runtime! syntax/groovy.vim
+syn include @Groovy syntax/groovy.vim
 
 " Define Jenkins File Keywords
 let s:jenkins_keywords = [
@@ -107,8 +104,12 @@ let s:jenkins_keywords = [
       \ 'withKubeConfig', 'withMaven', 'withNPM', 'withPod', 'withPythonEnv', 'withSCM', 'withSandbox', 'withSonarQubeEnv',
       \ 'withTypetalk', 'wrap', 'writeFile', 'writeJSON', 'writeMavenPom', 'writeProperties', 'writeXml', 'writeYaml',
       \ 'ws', 'xUnitImporter', 'xUnitUploader', 'xldCreatePackage', 'xldDeploy', 'xldPublishPackage', 'xlrCreateRelease',
-      \ 'xrayScanBuild', 'zip', 'expression'
+      \ 'xrayScanBuild', 'zip', 'expression', 'label'
       \ ]
+
+" Top level
+syn keyword jenkinsfileTop pipeline contained
+syn keyword jenkinsfileTop library contained
 
 let s:levels = [
       \ 'Identifier',
@@ -128,12 +129,15 @@ for lvl in range(1, s:max)
   endfor
 endfor
 
+"define base region
+syn region lvl0 start=/\%^/ end=/\%$/ contains=@Groovy,lvl1,jenkinsfileTop
+
 " define regions
 for lvl in range(1, s:max)
- let nextLvl = (lvl % s:max) + 1
- let contained = lvl == 1 ? '' : 'contained'
- let cmd = 'syn region %s matchgroup=%s start=/{/ end=/}/ contains=%s,%s %s'
- exe printf(cmd, 'lvl'.lvl, 'lvl'.lvl, 'lvl'.nextLvl, 'jenkinsKeyword_lvl'.lvl, contained)
+  let nextLvl = (lvl % s:max) + 1
+  let contained = lvl == 1 ? '' : 'contained'
+  let cmd = 'syn region %s matchgroup=%s start=/{/ end=/}/ contains=@Groovy,%s,%s %s'
+  exe printf(cmd, 'lvl'.lvl, 'lvl'.lvl, 'lvl'.nextLvl, 'jenkinsKeyword_lvl'.lvl, contained)
 endfor
 
 " define highlighting
@@ -141,5 +145,7 @@ for lvl in range(1, s:max)
   let cmd = 'hi link %s %s'
   exe printf(cmd, 'jenkinsKeyword_lvl'.lvl, s:levels[lvl-1])
 endfor
+
+hi link jenkinsfileTop Structure
 
 let b:current_syntax = "Jenkinsfile"
