@@ -9,7 +9,8 @@ elseif exists("b:current_syntax")
   finish
 endif
 
-" runtime! syntax/groovy.vim
+runtime! syntax/groovy.vim
+unlet! b:current_syntax
 syn include @Groovy syntax/groovy.vim
 
 " Define Jenkins File Keywords
@@ -108,8 +109,8 @@ let s:jenkins_keywords = [
       \ ]
 
 " Top level
-syn keyword jenkinsfileTop pipeline contained
-syn keyword jenkinsfileTop library contained
+syn keyword jenkinsfileTop pipeline
+syn keyword jenkinsfileTop library
 
 let s:levels = [
       \ 'Identifier',
@@ -128,9 +129,6 @@ for lvl in range(1, s:max)
     exe printf(cmd, 'jenkinsKeyword_lvl'.lvl, keyword)
   endfor
 endfor
-
-"define base region
-syn region lvl0 start=/\%^/ end=/\%$/ contains=@Groovy,lvl1,jenkinsfileTop
 
 " define regions
 for lvl in range(1, s:max)
