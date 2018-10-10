@@ -1,16 +1,22 @@
 # Jenkinsfile-vim-syntax
 A plugin that enables Jenkins DSL job syntax coloring + indentation.
-
-## Under the hood
-Simply recognises your project's `Jenkinsfile` as a [Groovy](http://groovy-lang.org/) script. See [this Jenkins documentation](https://jenkins.io/doc/book/pipeline/jenkinsfile/) for details.
+This project was forked from
+[this repository](https://github.com/martinda/Jenkinsfile-vim-syntax),
+the syntax highlighting I originally used for Jenkinsfile. This project differs
+from its parent repository in its method of highlighting. The original project
+highlighted on keyword alone. This project highlights based on keyword
+and depth in the nested pipeline structure. In this implementation, all
+keywords in the same level of the nested structure are highlighted in the
+same manner.
 
 ## Installation
-Installing the plugin's easy. First, make sure you've got [pathogen](https://github.com/tpope/vim-pathogen) installed. Then, just clone this repo:
+Install using your favorite vim plugin manager. Below I use vim-plug as an
+example.
 
-```bash
-git clone git@github.com:martinda/Jenkinsfile-vim-syntax.git ~/.vim/bundle/Jenkinsfile-vim-syntax
+```javascript
+call plug#begin('~/.vim/plugged')
+
+Plug 'khalliday7/Jenkinsfile-vim-syntax'
+
+call plug#end()
 ```
-
-Then fire up Vim and you're good to go.
-
-Alternatively, this is included in the [vim-polyglot package](https://github.com/sheerun/vim-polyglot), though polyglot may lag behind this repo by a version or two.
